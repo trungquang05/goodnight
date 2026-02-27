@@ -21,38 +21,42 @@
       }
 
       @keyframes backgroundBlink {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
       }
 
       h1 {
-        color: rgb(192, 11, 119);
+        color: rgb(240, 9, 59);
         font-size: 3em;
-        text-shadow: 0 0 10px rgba(194, 152, 152, 0.8);
-        animation: fadeIn 3s ease-in-out infinite alternate,
-          blink 4s step-start infinite;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        text-align: center;
+        padding: 0 20px;
+        min-height: 1.5em;
       }
 
-      @keyframes fadeIn {
+      .slide-in {
+        animation: slideIn 1s ease forwards;
+      }
+
+      @keyframes slideIn {
         0% {
-          opacity: 0.5;
+          opacity: 0;
+          transform: translateY(50px);
         }
         100% {
           opacity: 1;
+          transform: translateY(0);
         }
       }
 
-      @keyframes blink {
-        50% {
-          opacity: 0;
-        }
+      .fade-out {
+        animation: fadeOut 0.6s ease forwards;
+      }
+
+      @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
       }
 
       .music-control {
@@ -61,44 +65,69 @@
         background: rgba(255, 255, 255, 0.3);
         color: #fff;
         font-size: 1.2em;
-        border-radius: 5px;
+        border-radius: 8px;
         cursor: pointer;
-        transition: background 1s ease;
+        transition: background 0.5s ease, transform 0.3s ease;
       }
 
       .music-control:hover {
         background: rgba(255, 255, 255, 0.5);
+        transform: scale(1.05);
       }
     </style>
   </head>
   <body>
-    <h1>Gút Nai ✨</h1>
+
+    <h1 id="wishText"></h1>
+    <div class="signature" style="font-size: 30px;">_trquang05_</div>
+
+
     <div class="music-control" onclick="toggleMusic()">🎵 Bật/Tắt Nhạc</div>
+
     <audio id="bgMusic" loop>
-      <source src="Ấn Nút Nhớ... Thả Giấc Mơ.mp3" type="audio/mp3" />
+      <source
+        src="y2mate.com - DAISHI DANCE Cecile Corbel  Take Me Hand Lyrics.mp3"
+        type="audio/mp3"
+      />
     </audio>
 
     <script>
       const music = document.getElementById("bgMusic");
+      const wishElement = document.getElementById("wishText");
       let isPlaying = false;
+      let isFirstLoad = true;
 
-      // Hàm bật/tắt nhạc
-      function toggleMusic() {
-        if (isPlaying) {
-          music.pause();
-          isPlaying = false;
-        } else {
-          music.play();
-          isPlaying = true;
-        }
+      const wishes = [
+        "Ngủ ngon nhé, mai còn dậy sớm đó 😌",
+        "Cậu ngủ ngoan nha, đừng thức khuya nữa 😑",
+        "Chúc cậu mơ đẹp mai kể tớ nghe đó 😆" ,
+        "Đêm nay ngủ thật ngon nhé 🌙",
+        "Nhắm mắt lại đi, mai còn nhiều chuyện để nói lắm đó 🌻",
+        "Ngủ ngoan nha, mai dậy sớm để thành công nhé hehe 😁",
+        "Chúc cậu một giấc ngủ thật sâu nnh ✨",
+        "Ngủ đi cậu ơi, tớ đợi sáng mai cậu chào buổi sáng đó😊",
+        "Thoi ngủ đi cậu, tớ cũng chuẩn bị ngủ đây 💤"
+      ];
+      function typeWriter(text, speed = 80) {
+        wishElement.innerHTML = "";
+        const words = text.split(" ");
+        let index = 0;
+
+        const interval = setInterval(() => {
+          wishElement.innerHTML += words[index] + " ";
+          index++;
+          if (index >= words.length) {
+            clearInterval(interval);
+          }
+        }, speed);
       }
 
-      // Xử lý lỗi nếu không phát được nhạc
-      music.onerror = () => {
-        alert(
-          "Không thể phát nhạc. Vui lòng kiểm tra đường dẫn hoặc file nhạc."
-        );
-      };
-    </script>
-  </body>
-</html>
+      function showRandomWish() {
+        const randomIndex = Math.floor(Math.random() * wishes.length);
+        const newText = wishes[randomIndex];
+
+        if (isFirstLoad) {
+          typeWriter(newText, 150);
+          isFirstLoad = false;
+        } else {
+          wishElement.classList.remove("slide-in");
